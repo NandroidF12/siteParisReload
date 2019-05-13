@@ -30,8 +30,8 @@ public class TestMetier {
 
 		testSolderVainqueur();// done
 		
-		testConsulterCompetitions(); //partly done
-		testConsulterCompetiteurs(); //partly done
+		testConsulterCompetitions(); //done
+		testConsulterCompetiteurs(); //done
 		
 		testConsulterJoueurs(); //todo
 
@@ -1266,14 +1266,13 @@ public class TestMetier {
 
 			// inscription de joueurs 
 
-			//String passwdBernard = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), new String("ilesCaimans"));					
+			String passwdBernard = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), new String("ilesCaimans"));
 			String passwdFrancoise = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Francoise"), new String("fanfan"), new String("ilesCaimans"));					
 			String passwdPascal = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Pascal"), new String("pascal"), new String("ilesCaimans"));
 			String passwdMorgane = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Morgane"), new String("momo"), new String("ilesCaimans"));
 			String passwdAureliane = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), new String("ilesCaimans"));
 			String passwdSylvain = siteDeParisMetier.inscrireJoueur(new String("Nadou"), new String("Sylvain"), new String("zinzin"), new String("ilesCaimans"));
-			String passwdRaymond = siteDeParisMetier.inscrireJoueur(new String("Raymond"), new String("Klutse"), new String("rayray"), new String("ilesCaimans"));
-			
+
 			
 			if (siteDeParisMetier.consulterJoueurs(new String("ilesCaimans")).size() != 6)
 				System.out.println("consulterJoueurs  rend une  liste qui n'a pas 6 éléments alors qu'il y a eu inscription de 6 joueurs");
@@ -1308,14 +1307,14 @@ public class TestMetier {
 
 			// mises de joueurs
 
-			/*siteDeParisMetier.miserVainqueur(new String("nanard"), passwdBernard, 40, new String("ChampionnatDeFrance2012"), new String("Lyon"));
+			siteDeParisMetier.miserVainqueur(new String("nanard"), passwdBernard, 40, new String("ChampionnatDeFrance2012"), new String("Lyon"));
 			siteDeParisMetier.miserVainqueur(new String("fanfan"), passwdFrancoise, 20, new String("ChampionnatDeFrance2012"), new String("Brest"));
 			siteDeParisMetier.miserVainqueur(new String("zinzin"), passwdSylvain, 40, new String("ChampionnatDeFrance2012"), new String("Lille"));
 			siteDeParisMetier.miserVainqueur(new String("aure"), passwdAureliane, 37, new String("ChampionnatDeFrance2012"), new String("Marseille"));
 
 			siteDeParisMetier.miserVainqueur(new String("nanard"), passwdBernard, 80, new String("ChampionnatDeFrance2013"), new String("Nantes"));
 			siteDeParisMetier.miserVainqueur(new String("fanfan"), passwdFrancoise, 30, new String("ChampionnatDeFrance2013"), new String("Rennes"));
-			siteDeParisMetier.miserVainqueur(new String("aure"), passwdAureliane, 48, new String("ChampionnatDeFrance2013"), new String("Nantes"));*/
+			siteDeParisMetier.miserVainqueur(new String("aure"), passwdAureliane, 48, new String("ChampionnatDeFrance2013"), new String("Nantes"));
 
 			joueurs = siteDeParisMetier.consulterJoueurs(new String("ilesCaimans"));
 			for (LinkedList <String> l : joueurs) {

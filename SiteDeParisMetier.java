@@ -8,6 +8,7 @@ import siteParis.model.Pari;
 import java.util.LinkedList;
 
 // Package for the random password
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -458,6 +459,7 @@ public class SiteDeParisMetier {
 	 * si <code>nom</code>, <code>prenom</code>,  <code>pseudo</code> sont invalides.
 	 * @throws JoueurInexistantException   levée si il n'y a pas de joueur  avec les mêmes nom,  prénom et pseudo.
 	 */
+
 	public void crediterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons, String passwordGestionnaire) throws MetierException, JoueurException, JoueurInexistantException {
 		validitePasswordGestionnaire(passwordGestionnaire);
 		validiteParametresJoueur(nom, prenom, pseudo);
@@ -476,6 +478,7 @@ public class SiteDeParisMetier {
 
 		if(!joueurTrouve) throw new JoueurInexistantException();
 	}
+
 
 
 	/**
@@ -539,32 +542,24 @@ public class SiteDeParisMetier {
 	 *  <li>       le total de jetons engagés dans ses mises en cours. </li>
 	 *  </ul>
 	 */
+
 	public LinkedList <LinkedList <String>> consulterJoueurs(String passwordGestionnaire) throws MetierException {
 
 		validitePasswordGestionnaire(passwordGestionnaire);
 
 		// intialise the String List of Players.
-		LinkedList<LinkedList<String>> listJouers = new LinkedList<LinkedList<String>>();
-		LinkedList<String> joueur_auxiliar = new LinkedList<String>();
+		LinkedList listJouers = new LinkedList<LinkedList<String>>();
 
-		for(Joueur j : this.joueurs){
-			System.out.println("Nom de joueur : " + j.getNom());
-			joueur_auxiliar.add(j.getNom());
-			joueur_auxiliar.add(j.getPreNom());
-			joueur_auxiliar.add(j.getPseudo());
-			listJouers.add(joueur_auxiliar);
+		for(Joueur joueur : this.joueurs)	{
+			listJouers.add(joueur.getJoueurParametres());
 		}
-		
+
+//		System.out.println(listJouers.size());
 		return listJouers;
 	}
 
 
-
-
-
 	// Les méthodes avec mot de passe utilisateur
-
-
 
 	/**
 	 * mFiserVainqueur  (parier sur une compétition, en désignant un vainqueur).
@@ -790,6 +785,7 @@ public class SiteDeParisMetier {
 			pari.getJoueur().remiseJetons(pari.getJetons());
 		}
 	}
+
 
 	/*******************************************************************************************************************/
 	public class RandomAlphanumeric	{

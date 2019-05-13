@@ -1,5 +1,8 @@
 package siteParis.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Joueur {
 	
 	private String prenom; //prenom de Joueur
@@ -88,5 +91,17 @@ public class Joueur {
 	public void setPari (Pari pari){
 			this.pari = pari;
 		}
+
+	// get the parameters of the player for the method consulterJoueurs
+	public List<String> getJoueurParametres() {
+
+		List<String> joueurParametres = new LinkedList();
+		joueurParametres.add(this.nom);
+		joueurParametres.add(this.prenom);
+		joueurParametres.add(String.valueOf(this.getJetons()));
+		joueurParametres.add(this.pseudo);
+
+		return joueurParametres;
+	}
 
 }
