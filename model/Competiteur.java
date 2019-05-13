@@ -5,17 +5,17 @@ public class Competiteur extends Personne {
 	//paris de competiteur
 	private Pari pari;
 	 
-	public Competiteur(String nom, String mdp, String pseudo) {
-		super(nom, mdp, pseudo);
+	public Competiteur(String nom, String motDePasse, String pseudo) {
+		super(nom, motDePasse, pseudo);
 		// TODO Auto-generated constructor stub
 	}
 
-	//retourner les Paris
+	//getter of the Bet.
 	public Pari getPari() {
 		return pari;
 	}
 
-	//changer le Paris
+	//setter of the Bet
 	public void setPari(Pari pari) {
 		this.pari = pari;
 	}

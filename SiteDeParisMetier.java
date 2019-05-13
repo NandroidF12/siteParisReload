@@ -8,14 +8,13 @@ import siteParis.model.Pari;
 import java.util.LinkedList;
 
 // Package for the random password
-import java.util.List;
 import java.util.Random;
 
 /**
  *
  * @author Bernard Prou et Julien Mallet
  * <br><br>
- * La classe qui contient toutes les méthodes "Métier" de la gestion du site de paris.
+ * La classe qui contient toutes les méthodes "Métier" de la gestion du site de parisListe.
  * <br><br>
  * Dans toutes les méthodes :
  * <ul>
@@ -50,19 +49,19 @@ import java.util.Random;
 public class SiteDeParisMetier {
 
 	//mot de passe de gestionnaire
-	private String password_Gestionnaire;
+	private String passwordGestionnaire;
 
 	//la liste des competitons.
-	private LinkedList<Competition> competitions;
+	private LinkedList<Competition> competitionsListe;
 	
-	// la liste des joueurs.
-	private LinkedList<Joueur> joueurs;
+	// la liste des joueursListe.
+	private LinkedList<Joueur> joueursListe;
 	
-	// la liste des competiteurs.
-	private LinkedList<Competiteur> competiteurs;
+	// la liste des competiteursListe.
+	private LinkedList<Competiteur> competiteursListe;
 
-    // la liste des paris.
-    private LinkedList<Pari> paris;
+    // la liste des parisListe.
+    private LinkedList<Pari> parisListe;
 
 	/**
 	 * constructeur de <code>SiteDeParisMetier</code>.
@@ -73,41 +72,28 @@ public class SiteDeParisMetier {
 	 * si le <code>passwordGestionnaire</code>  est invalide
 	 */
 	public SiteDeParisMetier(String passwordGestionnaire) throws MetierException {
-		password_Gestionnaire = passwordGestionnaire;
+		this.passwordGestionnaire = passwordGestionnaire;
 		this.validitePasswordGestionnaire(passwordGestionnaire);
 
-        //la liste des competitions.
-        this.competitions = new LinkedList<Competition>();
+        //la liste des competitionsListe.
+        this.competitionsListe = new LinkedList<Competition>();
 
-        // la liste des joueurs.
-        this.joueurs= new LinkedList<Joueur>();
+        // la liste des joueursListe.
+        this.joueursListe = new LinkedList<Joueur>();
 
-        // la liste des competiteurs.
-        this.competiteurs = new LinkedList<Competiteur>();
+        // la liste des competiteursListe.
+        this.competiteursListe = new LinkedList<Competiteur>();
 
-        this.paris = new LinkedList<Pari>();
+        // la liste des parisListe.
+        this.parisListe = new LinkedList<Pari>();
     }
 
-	/**
-	 * vérifier la validité du password du gestionnaire.
-	 *
-	 * @param passwordGestionnaire   le password du gestionnaire à vérifier
-	 *
-	 * @throws MetierException   levée
-	 * si le <code>passwordGestionnaire</code> est invalide.
-	 */
-	protected void validitePasswordGestionnaire(String passwordGestionnaire) throws MetierException {
-		
-		if (passwordGestionnaire==null) throw new MetierException("passwordGestionnaire est invalide");
-		if (!passwordGestionnaire.matches("[0-9A-Za-z]{8,}")) throw new MetierException();
-		if(passwordGestionnaire == null) throw new MetierException("passwordGestionnaire est vide");
-		if(passwordGestionnaire.length() < 8) throw new MetierException("passwordGestionnaire est moins de 8");
-		if(passwordGestionnaire.contains(" ")) throw new MetierException("passwordGestionnaire contient un space");
-		if(passwordGestionnaire.contains("-")) throw new MetierException("passwordGestionnaire contient un -");
-		if(!passwordGestionnaire.equals(password_Gestionnaire)) throw new MetierException("passwordGestionnaire incorrecte");
-	}
 
-	// Les méthodes du gestionnaire (avec mot de passe gestionnaire)
+	/*
+	 * 				Les méthodes du gestionnaire (avec mot de passe gestionnaire)
+ 	 */
+
+
 	/**
 	 * inscrire un joueur.
 	 *
@@ -125,46 +111,51 @@ public class SiteDeParisMetier {
 	 * @return le mot de passe (déterminé par le site) du nouveau joueur inscrit.
 	 */
 	public String inscrireJoueur(String nom, String prenom, String pseudo, String passwordGestionnaire) throws MetierException, JoueurExistantException, JoueurInexistantException,JoueurException {
- 		this.validitePasswordGestionnaire(passwordGestionnaire);
-		this.validiteParametresJoueur(nom, prenom, pseudo);
 
-		//création de Mdp de Joueur
-		String j_mdp = null;
-        boolean joueurexistflag = false;
+		validitePasswordGestionnaire(passwordGestionnaire);
+		validiteParametresJoueur(nom, prenom, pseudo);
 
+		//création du mot de passe de Joueur
+		String joueurMotDePasse = null;
+        boolean joueurExistantFlag = false;
+        
         RandomAlphanumeric joueur_mdp = new RandomAlphanumeric();
-        j_mdp = joueur_mdp.generateRandomAlphanumeric(10);
+        joueurMotDePasse = joueur_mdp.generateRandomAlphanumeric(10);
 
-        Joueur newjoueur = new Joueur();
-        newjoueur.setNom(nom);
-        newjoueur.setPreNom(prenom);
-        newjoueur.setPseudo(pseudo);
-        newjoueur.setPassword(j_mdp);
+        // Création d'un nouveau Joueur.
+        Joueur joueurNouveuau = new Joueur();
+        joueurNouveuau.setNom(nom);
+        joueurNouveuau.setPreNom(prenom);
+        joueurNouveuau.setPseudo(pseudo);
+        joueurNouveuau.setMotDePasse(joueurMotDePasse);
 
-        boolean joueurexistant = false;
-        boolean joueurnomprenomexistant = false;
-        boolean joueurpseudoexistant = false;
+        // Les drapeaux pour valider chaque exception.
+        boolean joueurExistant = false;
+        boolean joueurNomPrenomExistant = false;
+        boolean joueurPseudoExistant = false;
 
-		for(Joueur joueur : this.joueurs) {
-			if(joueur.equals(newjoueur)) {
-				joueurexistant = true;
+        // Cherche s'il y a un joueur avec le même paramètres.
+		for(Joueur joueur : this.joueursListe) {
+			if(joueur.equals(joueurNouveuau)) {
+				joueurExistant = true;
 			}
 			 
 			if((joueur.getNom().equals(nom) && joueur.getPreNom().equals(prenom))) {
-				joueurnomprenomexistant = true;
+				joueurNomPrenomExistant = true;
 			} 
 			if((joueur.getPseudo().equals(pseudo))) {
-				joueurpseudoexistant = true;
+				joueurPseudoExistant = true;
 			} 
 			
 		}
-		
-		if(joueurexistant)throw new JoueurExistantException("Joueur existant");
-		if(joueurnomprenomexistant)throw new JoueurExistantException("Joueur avec les mêmes noms et prénoms existant ");
-		if(joueurpseudoexistant)throw new JoueurExistantException("joueur avec un pseudo existant ");
-		this.joueurs.add(newjoueur);
+
+		// Faire les exceptions pour chaque cas proposé.
+		if(joueurExistant)throw new JoueurExistantException("Joueur existant");
+		if(joueurNomPrenomExistant)throw new JoueurExistantException("Joueur avec les mêmes noms et prénoms existant ");
+		if(joueurPseudoExistant)throw new JoueurExistantException("joueur avec un pseudo existant ");
+		this.joueursListe.add(joueurNouveuau);
 			
-		return "Le nom de cette Joueur est : " + j_mdp;
+		return "Le nom de cette Joueur est : " + joueurMotDePasse;
 
 	}
 
@@ -181,7 +172,7 @@ public class SiteDeParisMetier {
 	 * si le <code>passwordGestionnaire</code> est incorrect.
 	 * @throws JoueurInexistantException   levée si il n'y a pas de joueur  avec le même <code>nom</code>, <code>prenom</code>  et <code>pseudo</code>.
 	 * @throws JoueurException levée
-	 * si le joueur a des paris en cours,
+	 * si le joueur a des parisListe en cours,
 	 * si <code>nom</code>, <code>prenom</code>, <code>pseudo</code> sont invalides.
 	 *
 	 * @return le nombre de jetons à rembourser  au joueur qui vient d'être désinscrit.
@@ -190,26 +181,31 @@ public class SiteDeParisMetier {
 	
 	public long desinscrireJoueur(String nom, String prenom, String pseudo, String passwordGestionnaire) throws MetierException, JoueurInexistantException, JoueurException {
 
+		// Validation des paramètres du Gestionnaire et du Joueur.
+		validitePasswordGestionnaire(passwordGestionnaire);
+		validiteParametresJoueur(nom, prenom, pseudo);
 
+		// Nombre du jetons à rembourse.
 		long jetonRembourse = 20;
-		this.validitePasswordGestionnaire(passwordGestionnaire);
-		this.validiteParametresJoueur(nom, prenom, pseudo);
 
+		// Les drapeaux pour valider chaque exception.
 		boolean joueurInexistant = true;
 		boolean joueurDejaRetire = false;
 
-		for(Joueur joueur : this.joueurs) {
+		// Cherche s'il y a un joueur avec le même paramètres.
+		for(Joueur joueur : this.joueursListe) {
 
-			for (int i = 0; i < this.joueurs.size(); i++) {
+			for (int i = 0; i < this.joueursListe.size(); i++) {
 
 				if ((joueur.getNom().equals(nom) && joueur.getPreNom().equals(prenom)) && joueur.getPseudo().equals(pseudo)) {
 					joueurInexistant = false;
 					joueurDejaRetire = true;
-					this.joueurs.remove(i);
+					this.joueursListe.remove(i);
 				}
 			}
 		}
 
+		// Faire les exceptions pour chaque cas proposé.
 		if(joueurInexistant) throw new JoueurInexistantException("Joueur inexistant");
 		if(!joueurDejaRetire) throw new JoueurInexistantException("Joueur déjà retiré");
 
@@ -234,44 +230,32 @@ public class SiteDeParisMetier {
 	 * @throws CompetitionExistanteException levée si une compétition existe avec le même nom.
 	 * @throws CompetitionException levée si le nom de la
 	 * compétition ou des compétiteurs sont invalides, si il y a
-	 * moins de 2 compétiteurs, si un des competiteurs n'est pas instancié,
+	 * moins de 2 compétiteurs, si un des competiteursListe n'est pas instancié,
 	 * si deux compétiteurs ont le même nom, si la date de clôture
 	 * n'est pas instanciée ou est dépassée.
 	 */
 
 	public void ajouterCompetition(String competition, DateFrancaise dateCloture, String [] competiteurs, String passwordGestionnaire) throws MetierException, CompetitionExistanteException, CompetitionException  {
-		this.validitePasswordGestionnaire(passwordGestionnaire);
 
-		if(competition== null) throw new  CompetitionException("compétition avec nom de compétiteur contient un space");
-
-		if(competition.contains(" ")) throw new  CompetitionException("compétition avec nom qui contient un space");
-
-		if(competition.contains("|")) throw new  CompetitionException("compétition avec nom qui contient un |");
-
-		if(competition.length() < 4) throw new  CompetitionException("compétition avec nom invalide (moins de 4 caracteres)");
-
-		if(competiteurs ==null) throw new  MetierException("compétition avec nom invalide (moins de 4 caracteres)");
-
-		if(competiteurs.length <= 1) throw new  CompetitionException("compétition avec nom invalide (moins de 4 caracteres)");
-
-		if(dateCloture == null) throw new CompetitionException("compétition sans date cloture.");
+		validitePasswordGestionnaire(passwordGestionnaire);
+		validiteCompetition(competition,dateCloture,competiteurs);
 
 		// Prototype of before():	public boolean before(Date when)
 		if(dateCloture.estDansLePasse() ) throw new CompetitionException("compétition sans date de début.");
 
-
-
+		// Ajouter competiteur dans la competition.
 		for(int i = 0; i < competiteurs.length; i++ ) {
 
+			// Faire les exceptions pour chaque cas proposé.
 			if(competiteurs[i]== null) throw new  CompetitionException("nom de compétiteur contient un space");
 			if(competiteurs[i].contains(" ")) throw new  CompetitionException("nom de compétiteur contient un space");
 			if(competiteurs[i].contains("*")) throw new  CompetitionException("nom de compétiteur contient un space");
 			if(competiteurs[i].contains("|")) throw new  CompetitionException("nom de compétiteur contient un space");
 			if(competiteurs[i].length() < 4) throw new  CompetitionException("nom de compétiteur invalide (moins de 4 caracteres)");
-//			if( i == 1) throw new CompetitionException("avec un seul compétiteur.");
+			if( competiteurs.length == 1) throw new CompetitionException("avec un seul compétiteur.");
 
-			if(!competiteurexisits(this.competiteurs,competiteurs[i]) == true) {
-				ajoutercompetiteur(competiteurs[i]);
+			if(!competiteurExisits(this.competiteursListe,competiteurs[i]) == true) {
+				ajouterCompetiteur(competiteurs[i]);
 			}
 			
 			for(int j = i + 1; j < competiteurs.length; j++ ) {
@@ -279,91 +263,33 @@ public class SiteDeParisMetier {
 			}
 		}
 
-		if(this.competiteurs == null) throw new  CompetitionException("liste de competiteur vide");
+		if(this.competiteursListe == null) throw new  CompetitionException("liste de competiteur vide");
 
 		if(dateCloture == null) throw new  CompetitionException("compétition avec nom qui contient un *");
 		
-		//parcours les competiteurs fourni par le fonction
+		//parcours les competiteursListe fourni par le fonction
 		for(int i = 0; i < competiteurs.length; i++ ) {
 
 		}
 		
-		for(Competition competitionobj: this.competitions) {
+		for(Competition competitionObj: this.competitionsListe) {
 		
-			if(competitionobj.getNom().equals(competition)) throw new CompetitionExistanteException();
+			if(competitionObj.getNom().equals(competition)) throw new CompetitionExistanteException();
 			
 		}
 		//creer la propre liste competiteur pour la competition
-		LinkedList<String> competiteursdecompetition = creerlistdecompetiton(competiteurs);
+		LinkedList<String> competiteursDeCompetition = creerListeDeCompetiton(competiteurs);
 
 		//creer l'instance de Competition
-		Competition newcompetition = new Competition(competition, dateCloture, competiteursdecompetition);
+		Competition competitionNouveau = new Competition(competition, dateCloture, competiteursDeCompetition);
 
 		
 		//ajouter la competition dans la liste de competiton
-		this.competitions.add(newcompetition);
+		this.competitionsListe.add(competitionNouveau);
 		
 	}
 
 
-	/**
-	 * ajouter un nouveau  competiteur dans la liste de competiteurs.
-	 *
-	 * @param nom   la nom de competiteur
-	 *
-	 *
-	 *  * @throws CompetitionException levée si le nom de competiteur exist déjà
-	 */
-
-	private void ajoutercompetiteur(String nom) {
-		Competiteur competiteur = new Competiteur(nom,nom,nom);
-		this.competiteurs.add(competiteur);
-	}
-
-	/**
-	 * créé liste de competiteur contenant le nom competiteur.
-	 *
-	 * @param competiteurs   la table de nom de competiteurs
-	 *
-	 *
-	 *  * @throws CompetitionException levée si le nom de competiteur exist déjà
-	 */
-
-	private LinkedList<String> creerlistdecompetiton(String [] competiteurs) {
-		LinkedList<String> competiteursdecompetition = new LinkedList<>();
-		for(int i = 0; i < competiteurs.length; i++ ) {
-			competiteursdecompetition.add(competiteurs[i]);
-		}
-
-		return competiteursdecompetition;
-
-	}
-
-	/**
-	 * verifier l'existance d'un competiteur.
-	 *
-	 * @param listecompetiteurs la liste de competiteurs
-	 * @param competiteur   le nom de competiteur à verifier
-	 *
-	 *
-	 *  * @throws CompetitionException levée si le nom de competiteur exist déjà
-	 */
-
-	private boolean competiteurexisits(LinkedList<Competiteur> listecompetiteurs,String competiteur) {
-		boolean competiteurexist = false;
-
-		for(int i = 0; i < listecompetiteurs.size(); i++ ) {
-
-			String nom_competiteur = listecompetiteurs.get(i).getNom();
-
-			if(competiteur.equals(nom_competiteur)) {
-				competiteurexist = true;
-			}
-
-		}
-
-		return competiteurexist;
-	}
 
 
 	/**
@@ -378,7 +304,7 @@ public class SiteDeParisMetier {
 	 * misés sur ce compétiteur.
 	 *
 	 * Si aucun joueur n'a trouvé le
-	 * bon compétiteur, des jetons sont crédités aux joueurs ayant
+	 * bon compétiteur, des jetons sont crédités aux joueursListe ayant
 	 * misé sur cette compétition (conformément au montant de
 	 * leurs mises). La compétition est "supprimée" si il ne reste
 	 * plus de mises suite à ce solde.
@@ -399,51 +325,60 @@ public class SiteDeParisMetier {
 	 */
 	public void solderVainqueur(String competition, String vainqueur, String passwordGestionnaire) throws MetierException,  CompetitionInexistanteException, CompetitionException {
 
+		// Validation des paramètres du Gestionnaire et de la compétition à solder.
 		validitePasswordGestionnaire(passwordGestionnaire);
-		validiteCompetition(competition);
+		validiteCompetitionSolder(competition);
 
-		Competition foundCompetition = null;
-		Competiteur foundVainqueur = null;
+		// déclaration des classes pour la competition et le vainqueur à trouver.
+		Competition competitionTrouve = null;
+		Competiteur vainqueurTrouve = null;
 
+		// déclaration des variables pour les montants.
 		long montantTotalCompetition = 0;
 		long montantTotalVainqueur = 0;
 
-		LinkedList<Pari> competitionBetsList = new LinkedList<Pari>();
-		LinkedList<Pari> winningBetsList = new LinkedList<Pari>();
+		// declaration des listes pour le paris dans à compétition et pour les vainqueurs.
+		LinkedList<Pari> competitionListeParis = new LinkedList<Pari>();
+		LinkedList<Pari> vainqueursListeParis = new LinkedList<Pari>();
 
-		foundCompetition = findCompetition(competition);
-		if (foundCompetition == null) throw new CompetitionInexistanteException();
-		if (!foundCompetition.getDate().estDansLePasse()) throw new CompetitionException();
+		// chercher du competition et faire les exceptions pour chaque cas proposé.
+		competitionTrouve = competitionChercher(competition);
+		if (competitionTrouve == null) throw new CompetitionInexistanteException();
+		if (!competitionTrouve.getDateCreationCompetition().estDansLePasse()) throw new CompetitionException();
 
-		foundVainqueur = findCompetiteur(vainqueur, foundCompetition);
-		if (foundVainqueur == null) throw new CompetitionException();
+		// chercher du competiteur et faire les exceptions pour chaque cas proposé.
+		vainqueurTrouve = competiteurChercher(vainqueur, competitionTrouve);
+		if (vainqueurTrouve == null) throw new CompetitionException();
 
-		for (Pari pari : paris) {
-			if (pari.getCompetition().equals(foundCompetition)) {
+		// Addition dans une compétition et le vainqueur du compétition correspondant.
+		for (Pari pari : parisListe) {
+			if (pari.getCompetition().equals(competitionTrouve)) {
 				montantTotalCompetition += pari.getJetons();
-				competitionBetsList.add(pari);
+				competitionListeParis.add(pari);
 
-				if (pari.getCompetiteur().equals(foundVainqueur)) {
+				if (pari.getCompetiteur().equals(vainqueurTrouve)) {
 					montantTotalVainqueur += pari.getJetons();
-					winningBetsList.add(pari);
+					vainqueursListeParis.add(pari);
 				}
 			}
 		}
 
-		boolean noWinners = winningBetsList.size() == 0 && competitionBetsList.size() > 0;
-		if (noWinners) {
-			crediterWinners(competitionBetsList, 1, 1);
+		// Cas où il n'y a pas de/s vainqueurs.
+		boolean sansVainqueurs = vainqueursListeParis.size() == 0 && competitionListeParis.size() > 0;
+		if (sansVainqueurs) {
+			vainqueurCrediter(competitionListeParis, 1, 1);
 		} else {
-			crediterWinners(winningBetsList, montantTotalCompetition, montantTotalVainqueur);
+			vainqueurCrediter(vainqueursListeParis, montantTotalCompetition, montantTotalVainqueur);
 		}
-		updateTotalJetonsEngage(competitionBetsList);
+		totalJetons(competitionListeParis);
 
-		competitions.remove(foundCompetition);
+		// retrait de la compétition trouvé.
+		competitionsListe.remove(competitionTrouve);
 	}
 
 
 	/**
-	 * créditer le compte en jetons d'un joueur du site de paris.
+	 * créditer le compte en jetons d'un joueur du site de parisListe.
 	 *
 	 * @param nom   le nom du joueur
 	 * @param prenom   le prénom du joueur
@@ -461,28 +396,32 @@ public class SiteDeParisMetier {
 	 */
 
 	public void crediterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons, String passwordGestionnaire) throws MetierException, JoueurException, JoueurInexistantException {
+
+		// Validation des paramètres du Gestionnaire et du Joueur.
 		validitePasswordGestionnaire(passwordGestionnaire);
 		validiteParametresJoueur(nom, prenom, pseudo);
 
+		// Les drapeaux pour valider chaque exception.
 		boolean joueurTrouve = false;
 		boolean joueurNomPseudo = false;
 
-		if(sommeEnJetons < 0) throw new MetierException("Somme en jetons est negatives.");
+		if(sommeEnJetons < 0) throw new MetierException("Somme en jetons est negative.");
 
-		for(Joueur joueur: this.joueurs)    {
+		// Cherche s'il y a un joueur avec le même paramètres.
+		for(Joueur joueur: this.joueursListe)    {
             if(joueur.getNom().equals(nom) && joueur.getPreNom().equals(prenom) && joueur.getPseudo().equals(pseudo))   {
                 joueur.ajoutJetons(sommeEnJetons);
 				joueurTrouve = true;
             }
         }
 
+		// Faire les exceptions pour chaque cas proposé.
 		if(!joueurTrouve) throw new JoueurInexistantException();
 	}
 
 
-
 	/**
-	 * débiter le compte en jetons d'un joueur du site de paris.
+	 * débiter le compte en jetons d'un joueur du site de parisListe.
 	 *
 	 * @param nom   le nom du joueur
 	 * @param prenom   le prénom du joueur
@@ -501,33 +440,36 @@ public class SiteDeParisMetier {
 	 *
 	 */
 
-	public void debiterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons, String passwordGestionnaire) throws  MetierException, JoueurInexistantException, JoueurException {
-        this.validitePasswordGestionnaire(passwordGestionnaire);
-        this.validiteParametresJoueur(nom, prenom, pseudo);
 
+	public void debiterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons, String passwordGestionnaire) throws  MetierException, JoueurInexistantException, JoueurException {
+
+		// Validation des paramètres du Gestionnaire et du Joueur.
+		validitePasswordGestionnaire(passwordGestionnaire);
+        validiteParametresJoueur(nom, prenom, pseudo);
+
+		// Les drapeaux pour valider chaque exception.
         boolean joueurTrouve = false;
         boolean joueurNomPseudo = false;
 
         if(sommeEnJetons < 0) throw new MetierException("Somme en jetons est negatives.");
 
-        for(Joueur joueur: this.joueurs)    {
-
+		// Cherche s'il y a un joueur avec le même paramètres.
+        for(Joueur joueur: this.joueursListe)    {
             if(joueur.getNom().equals(nom) && joueur.getPreNom().equals(prenom) && joueur.getPseudo().equals(pseudo))   {
                 joueurTrouve = true;
                 joueur.remiseJetons(sommeEnJetons);
             }
         }
 
+		// Faire les exceptions pour chaque cas proposé.
         if(!joueurTrouve)  throw new JoueurInexistantException("Prenom is wrong but the Nom and the pseudo are right");
     }
 
 
-
-
 	/**
-	 * consulter les  joueurs.
+	 * consulter les joueursListe.
 	 *
-	 * @param passwordGestionnaire  le password du gestionnaire du site de paris
+	 * @param passwordGestionnaire  le password du gestionnaire du site de parisListe
 
 	 * @throws MetierException   levée
 	 * si le <code>passwordGestionnaire</code>  est invalide,
@@ -545,16 +487,17 @@ public class SiteDeParisMetier {
 
 	public LinkedList <LinkedList <String>> consulterJoueurs(String passwordGestionnaire) throws MetierException {
 
+		// Validation des paramètres du Gestionnaire.
 		validitePasswordGestionnaire(passwordGestionnaire);
 
-		// intialise the String List of Players.
+		// initialisation de la chaîne de la liste du joueurs.
 		LinkedList listJouers = new LinkedList<LinkedList<String>>();
 
-		for(Joueur joueur : this.joueurs)	{
+		//obtention des paramètres de chaque joueur de la liste
+		for(Joueur joueur : this.joueursListe)	{
 			listJouers.add(joueur.getJoueurParametres());
 		}
 
-//		System.out.println(listJouers.size());
 		return listJouers;
 	}
 
@@ -585,72 +528,121 @@ public class SiteDeParisMetier {
 	 */
 	public void miserVainqueur(String pseudo, String passwordJoueur, long miseEnJetons, String competition, String vainqueurEnvisage) throws MetierException, JoueurInexistantException, CompetitionInexistanteException, CompetitionException, JoueurException  {
 
+		// déclaration d'un nouveau pari pour réaliser la miser du vainqueur.
 		Pari pari = new Pari(miseEnJetons, vainqueurEnvisage);
 
-		// Integer to iterate the list of Competitors in the Competition to bet.
-		int i;
-
+		// Les drapeaux pour valider chaque exception.
 		boolean vainqueurFlag = false;
 	    boolean competitionflag = false;
-		boolean competiteurflag = false;
-		boolean joueurpseudoflag = false;
-		boolean joueurjetonsflag = false;
+	    boolean joueurFlag = false;
+		boolean joueurPseudoFlag = false;
 		boolean joueurpariflag = false;
 
-		if(miseEnJetons < 0) throw new MetierException("la somme en jetons est négative");
-		if(pseudo == null || passwordJoueur ==null) throw new JoueurException("pseudo ou passwordJoueur est invalide");
-		if(competition == null || vainqueurEnvisage ==null) throw new CompetitionException("competition ou vainqueurEnvisage est invalide");
-
 		//verifier que le competition existe
-		for(Competition competitionobj: this.competitions) {
+		for(Competition competitionObj: this.competitionsListe) {
 
 			// Fouiller du Competition
-			if (competitionobj.getNom().equals(competition)) {
+			if (competitionObj.getNom().equals(competition)) {
 				competitionflag = true;
 
-				LinkedList<String> competiteurs_liste = competitionobj.getCompetiteurs();
+				LinkedList<String> competiteursListeauxiliaire = competitionObj.getCompetiteursListe();
 
-				for (i = 0; i < competiteurs_liste.size(); i++) {
-					if (competiteurs_liste.get(i).equals(vainqueurEnvisage)) {
+				for(String competiteur : competiteursListeauxiliaire)	{
+					if (competiteur.equals(vainqueurEnvisage)) {
 						vainqueurFlag = true;
 					}
 				}
 			}
 		}
 
-		if(!vainqueurFlag) throw new CompetitionException("Nom du vainqueur n'est pas exist.");
-        Competiteur competiteur_vainqueur = new Competiteur(vainqueurEnvisage, passwordJoueur, pseudo);
-        competiteur_vainqueur.setNom(vainqueurEnvisage);
 
-        // Sur la class Joueur on a faire le debit sur le attribute Pari
-        for(Joueur joueur_pari : this.joueurs) {
+		// déclaration d'un compétiteur vainqueur.
+        Competiteur competiteurVainqueur = new Competiteur(vainqueurEnvisage, passwordJoueur, pseudo);
+        competiteurVainqueur.setNom(vainqueurEnvisage);
 
-            if(!(joueur_pari.getPseudo().equals(pseudo) && joueur_pari.getPassword().equals(passwordJoueur))) {
-                joueurpseudoflag = true;
+        // Dans la classe Joueur on a faire le debit sur le attribute Pari
+        for(Joueur joueurPari : this.joueursListe) {
+
+            if(joueurPari.getPseudo().equals(pseudo) && !joueurPari.getMotDePasse().equals(passwordJoueur)) {
+                joueurFlag = true;
             }
 
-            if(joueur_pari.getPseudo().equals(pseudo)) {
-                pari.setJoueur(joueur_pari);
-                String nom_j = joueur_pari.getNom();
-                String prenom_j = joueur_pari.getPreNom();
+            if(joueurPari.getPseudo().equals(pseudo)) {
+                pari.setJoueur(joueurPari);
 
-                if(joueur_pari.getJetons() > miseEnJetons) {
+                String nomJoueur = joueurPari.getNom();
+                String prenomJoueur = joueurPari.getPreNom();
+				joueurPseudoFlag = true;
+
+                if(joueurPari.getJetons() > miseEnJetons) {
                         joueurpariflag = true;
-                        debiterJoueur(nom_j, prenom_j, pseudo, miseEnJetons, password_Gestionnaire);
+                        debiterJoueur(nomJoueur, prenomJoueur, pseudo, miseEnJetons, passwordGestionnaire);
                 }
             }
         }
 
+		// Faire les exceptions pour chaque cas proposé.
+		if(miseEnJetons < 0) throw new MetierException("la somme en jetons est négative");
+		if(pseudo == null || passwordJoueur == null) throw new JoueurException("pseudo ou passwordJoueur est invalide");
+		if(competition == null || vainqueurEnvisage ==null) throw new CompetitionException("competition ou vainqueurEnvisage est invalide");
+		if(!vainqueurFlag) throw new CompetitionException("Nom du vainqueur n'est pas exist.");
 		if(!competitionflag) throw new CompetitionInexistanteException("il n'existe pas de compétition de même nom");
-		if(!joueurpseudoflag) throw new JoueurInexistantException("il n'y a pas de joueur avec les mêmes pseudos et password");
+		if(!joueurFlag) throw new JoueurException("il n'y a pas de joueur avec les mêmes pseudos et password");
 		if(!joueurpariflag) throw new JoueurException("Le joueur n'est peut mise une pari.");
 
 	}
 
-	//	if(!joueurpseudoflag) throw new JoueurInexistantException("il n'y a pas de joueur avec les mêmes pseudos et password");
 
 
-	// Les méthodes sans mot de passe
+	/*
+					Fonctions correspondant à les Compétitions.
+	 */
+
+	/**
+	 * valider les parametres du Compétition.
+	 *
+	 * @param competition   le nom du competition.
+	 * @param dateCloture   le date de creation du competition.
+	 * @param competiteurs  la liste du competiteurs.
+	 *
+	 * @throws CompetitionException
+	 * @throws MetierException
+	 */
+	protected void validiteCompetition(String competition, DateFrancaise dateCloture, String [] competiteurs) throws CompetitionException, MetierException{
+
+		if (competition == null) throw new CompetitionException("compétition avec nom de compétiteur contient un space");
+
+		if (competition.contains(" ")) throw new CompetitionException("compétition avec nom qui contient un space");
+
+		if (competition.contains("|")) throw new CompetitionException("compétition avec nom qui contient un |");
+
+		if (competition.length() < 4)
+			throw new CompetitionException("compétition avec nom invalide (moins de 4 caracteres)");
+
+		if (competiteurs == null) throw new MetierException("compétition avec nom invalide (moins de 4 caracteres)");
+
+		if (competiteurs.length <= 1)
+			throw new CompetitionException("compétition avec nom invalide (moins de 4 caracteres)");
+
+		if (dateCloture == null) throw new CompetitionException("compétition sans date cloture.");
+	}
+
+	protected static void validiteCompetitionSolder(String nomCompetition) throws CompetitionException {
+		if (nomCompetition == null) {
+			throw new CompetitionException();
+		} else if (!nomCompetition.matches("[0-9A-Za-z-_.]{4,}")) {
+			throw new CompetitionException();
+		}
+	}
+
+	public Competition competitionChercher(String nomCompetition){
+		for (Competition comp : competitionsListe) {
+			if (comp.getNom().equals(nomCompetition))
+			{return comp;}
+
+		}
+		return null;
+	}
 
 	/**
 	 * connaître les compétitions en cours.
@@ -664,17 +656,29 @@ public class SiteDeParisMetier {
 	public LinkedList <LinkedList <String>> consulterCompetitions(){
 		
 		LinkedList <LinkedList <String>> competitons = new LinkedList <LinkedList <String>>();
-		LinkedList <String> competitionsinfo = new LinkedList <String>();
+		LinkedList <String> competitionsInformation = new LinkedList <String>();
 		
-		for(Competition competition : this.competitions) {
-			
-			competitionsinfo.add(competition.getNom());
-			competitionsinfo.add(competition.getDate().toString());
-			competitons.add(competitionsinfo);
+		for(Competition competition : this.competitionsListe) {
+			competitionsInformation.add(competition.getNom());
+			competitionsInformation.add(competition.getDateCreationCompetition().toString());
+			competitons.add(competitionsInformation);
 		}
 		
 		return competitons;
 	}
+
+	public void vainqueurCrediter(LinkedList<Pari> competitionBetsList, long montantTotalCompetition, long montantTotalVainqueur){
+		for (Pari pari : competitionBetsList) {
+			pari.getJoueur().ajoutJetons(pari.getJetons()*montantTotalCompetition/montantTotalVainqueur);
+		}
+	}
+
+	public void totalJetons(LinkedList<Pari> competitionBetsList){
+		for (Pari pari : competitionBetsList) {
+			pari.getJoueur().remiseJetons(pari.getJetons());
+		}
+	}
+
 
 
 	/**
@@ -689,36 +693,137 @@ public class SiteDeParisMetier {
 	 * @return la liste des compétiteurs de la  compétition.
 	 */
 
+	/**
+	 * créé liste de competiteur contenant le nom competiteur.
+	 *
+	 * @param competiteurs   la table de nom de competiteursListe
+	 *
+	 *
+	 *  * @throws CompetitionException levée si le nom de competiteur exist déjà
+	 */
+
+	private LinkedList<String> creerListeDeCompetiton(String [] competiteurs) {
+
+		LinkedList<String> competiteursDeCompetition = new LinkedList<>();
+		for(int i = 0; i < competiteurs.length; i++ ) {
+			competiteursDeCompetition.add(competiteurs[i]);
+		}
+
+		return competiteursDeCompetition;
+
+	}
+
+	/*
+					Fonctions correspondant à les Competiteurs
+	 */
 
 	public LinkedList <String> consulterCompetiteurs(String competition) throws CompetitionException, CompetitionInexistanteException{
 		
-		LinkedList <String> listedecompetiteur = new LinkedList <String>();
-
-		if(competition== null) throw new  CompetitionException("nom de la compétition est invalide");
-		if(competition.length() < 4) throw new  CompetitionException("nom de la compétition invalide (moins de 4 caracteres)");
-		
-		for(Competiteur competiteur : this.competiteurs) {
-			if(competiteur== null) throw new  CompetitionException("nom de compétiteur invalide");
-			
-		}
+		LinkedList <String> competiteursListeAuxiliaires = new LinkedList <String>();
 
 		boolean competitionflag = false;
-		for(Competition competitionobj : this.competitions) {
-			
-			//verifier qu'il existe de compétition de même nom
-			//System.out.println("Nom de competition : " + competitionobj.getNom() + " Nombre de competiteurs : " + competitionobj.consulterCompetiteurs().size());
-			
-			if(competitionobj.getNom().equals(competition) ) {
+
+		// Cherche s'il y a un compétetion avec un nom invalide.
+		for(Competiteur competiteur : this.competiteursListe) {
+			if(competiteur== null) throw new  CompetitionException("nom de compétiteur invalide");
+		}
+
+		// Cherche s'il y a un compétetion avec le même nom et deposer la liste de competiteurs.
+		for(Competition competitionObj : this.competitionsListe) {
+
+			if(competitionObj.getNom().equals(competition) ) {
 				competitionflag = true;
+
 				//retrouver la liste de competiteur de cette competition
-				listedecompetiteur = competitionobj.getCompetiteurs();
+				competiteursListeAuxiliaires = competitionObj.getCompetiteursListe();
 			}
 		}
+
+
+		// Faire les exceptions pour chaque cas proposé.
+		if(competition== null) throw new  CompetitionException("nom de la compétition est invalide");
+		if(competition.length() < 4) throw new  CompetitionException("nom de la compétition invalide (moins de 4 caracteres)");
 		if(!competitionflag)throw new CompetitionInexistanteException("il n'existe pas de compétition de même nom");
-		return listedecompetiteur;
+
+		return competiteursListeAuxiliaires;
+	}
+
+	public Competiteur competiteurChercher(String lookedForCompetiteur, Competition inCompetition){
+
+		//	Competiteur foundVainqueur
+		Competiteur foundVainqueur = null;
+
+		for(Competiteur competiteur : this.competiteursListe)	{
+			if (competiteur.getNom().equals(lookedForCompetiteur)){
+				foundVainqueur = competiteur;
+			}
+		}
+		return foundVainqueur;
+	}
+
+	/**
+	 * ajouter un nouveau  competiteur dans la liste de competiteursListe.
+	 *
+	 * @param nom   la nom de competiteur
+	 *
+	 *
+	 *  * @throws CompetitionException levée si le nom de competiteur exist déjà
+	 */
+
+	private void ajouterCompetiteur(String nom) {
+		Competiteur competiteur = new Competiteur(nom,nom,nom);
+		this.competiteursListe.add(competiteur);
+	}
+
+	/**
+	 * verifier l'existance d'un competiteur.
+	 *
+	 * @param listecompetiteurs la liste de competiteursListe
+	 * @param competiteur   le nom de competiteur à verifier
+	 *
+	 *
+	 *  * @throws CompetitionException levée si le nom de competiteur exist déjà
+	 */
+
+	private boolean competiteurExisits(LinkedList<Competiteur> listecompetiteurs, String competiteur) {
+		boolean competiteurexist = false;
+
+		for(int i = 0; i < listecompetiteurs.size(); i++ ) {
+
+			String nom_competiteur = listecompetiteurs.get(i).getNom();
+
+			if(competiteur.equals(nom_competiteur)) {
+				competiteurexist = true;
+			}
+		}
+
+		return competiteurexist;
 	}
 
 
+	/**
+	 * vérifier la validité du password du gestionnaire.
+	 *
+	 * @param passwordGestionnaire   le password du gestionnaire à vérifier
+	 *
+	 * @throws MetierException   levée
+	 * si le <code>passwordGestionnaire</code> est invalide.
+	 */
+	protected void validitePasswordGestionnaire(String passwordGestionnaire) throws MetierException {
+
+		if (passwordGestionnaire==null) throw new MetierException("passwordGestionnaire est invalide");
+		if (!passwordGestionnaire.matches("[0-9A-Za-z]{8,}")) throw new MetierException();
+		if(passwordGestionnaire == null) throw new MetierException("passwordGestionnaire est vide");
+		if(passwordGestionnaire.length() < 8) throw new MetierException("passwordGestionnaire est moins de 8");
+		if(passwordGestionnaire.contains(" ")) throw new MetierException("passwordGestionnaire contient un space");
+		if(passwordGestionnaire.contains("-")) throw new MetierException("passwordGestionnaire contient un -");
+		if(!passwordGestionnaire.equals(this.passwordGestionnaire)) throw new MetierException("passwordGestionnaire incorrecte");
+	}
+
+
+	/*
+					Fonctions correspondant à les Joueurs.
+	 */
 
 	/**
 	 * valider les parametres du Joueur.
@@ -744,50 +849,6 @@ public class SiteDeParisMetier {
 
 	}
 
-	protected static void validiteCompetition(String nomCompetition) throws CompetitionException {
-		if (nomCompetition == null) {
-			throw new CompetitionException();
-		} else if (!nomCompetition.matches("[0-9A-Za-z-_.]{4,}")) {
-			throw new CompetitionException();
-		}
-	}
-
-	public Competition findCompetition(String nomCompetition){
-		for (Competition comp : competitions) {
-			if (comp.getNom().equals(nomCompetition))
-			{return comp;}
-
-		}
-		return null;
-	}
-
-	public Competiteur findCompetiteur(String lookedForCompetiteur, Competition inCompetition){
-
-	//	Competiteur foundVainqueur
-		Competiteur foundVainqueur = null;
-
-		for(Competiteur competiteur : this.competiteurs)	{
-			if (competiteur.getNom().equals(lookedForCompetiteur)){
-				foundVainqueur = competiteur;
-			}
-		}
-		return foundVainqueur;
-	}
-
-	public void crediterWinners(LinkedList<Pari> competitionBetsList, long montantTotalCompetition, long montantTotalVainqueur){
-		for (Pari pari : competitionBetsList) {
-			pari.getJoueur().ajoutJetons(pari.getJetons()*montantTotalCompetition/montantTotalVainqueur);
-		}
-	}
-
-	public void updateTotalJetonsEngage(LinkedList<Pari> competitionBetsList){
-		for (Pari pari : competitionBetsList) {
-			pari.getJoueur().remiseJetons(pari.getJetons());
-		}
-	}
-
-
-	/*******************************************************************************************************************/
 	public class RandomAlphanumeric	{
 		int i;
 
@@ -806,11 +867,5 @@ public class SiteDeParisMetier {
 			return concatenation.toString();
 		}
 	}
-
-
-    // ################################################################################################################
-
-
-
 }
 

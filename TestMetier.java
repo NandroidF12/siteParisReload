@@ -705,52 +705,61 @@ public class TestMetier {
 		System.out.println("\n testMiserVainqueur");
 
 		try {
-			SiteDeParisMetier sdm = new SiteDeParisMetier(new String("ilesCaimans"));
+			SiteDeParisMetier siteDeParisMetier= new SiteDeParisMetier(new String("ilesCaimans"));
 
 			DateFrancaise.setDate(1, 1, 2010);
 
-			String passwdBernard = sdm.inscrireJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), new String("ilesCaimans"));
-			String passwdFrancoise = sdm.inscrireJoueur(new String("Prou"), new String("Francoise"), new String("fanfan"), new String("ilesCaimans"));
-			String passwdPascal = sdm.inscrireJoueur(new String("Prou"), new String("Pascal"), new String("pascal"), new String("ilesCaimans"));
-			String passwdMorgane = sdm.inscrireJoueur(new String("Prou"), new String("Morgane"), new String("momo"), new String("ilesCaimans"));
-			String passwdAureliane = sdm.inscrireJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), new String("ilesCaimans"));
-			String passwdSylvain = sdm.inscrireJoueur(new String("Nadou"), new String("Sylvain"), new String("zinzin"), new String("ilesCaimans"));
+			// inscription de joueurs
 
-			sdm.crediterJoueur("Prou","Bernard","nanard", 500, "ilesCaimans");
-			sdm.crediterJoueur("Prou","Bernard","nanard", 500, "ilesCaimans");
-			sdm.crediterJoueur("Prou","Francoise","fanfan", 500, "ilesCaimans");
+			String passwdBernard = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), new String("ilesCaimans"));
+			String passwdFrancoise = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Francoise"), new String("fanfan"), new String("ilesCaimans"));
+			String passwdPascal = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Pascal"), new String("pascal"), new String("ilesCaimans"));
+			String passwdMorgane = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Morgane"), new String("momo"), new String("ilesCaimans"));
+			String passwdAureliane = siteDeParisMetier.inscrireJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), new String("ilesCaimans"));
+			String passwdSylvain = siteDeParisMetier.inscrireJoueur(new String("Nadou"), new String("Sylvain"), new String("zinzin"), new String("ilesCaimans"));
 
-			sdm.ajouterCompetition(new String("ChampionnatDeFrance2012"), new DateFrancaise(4, 6, 2012, 15, 00), new String [] {new String("Lyon"), new String("Marseille"), "Paris", new String("Rennes"), new String("Brest"), "StEtienne", new String("Lille"), "Nancy", "Toulouse", "Auxerre"}, new String("ilesCaimans"));
-			sdm.ajouterCompetition(new String("ChampionnatDeFrance2013"), new DateFrancaise(27, 6, 2013, 20, 00), new String [] {new String("Lyon"), new String("Nantes"), new String("Lens"), new String("Marseille"), "Paris", new String("Rennes"), "StEtienne", new String("Lille"), "Nancy", "Toulouse", }, new String("ilesCaimans"));
-			sdm.ajouterCompetition(new String("finaleRG2012"), new DateFrancaise(7, 6, 2012, 15, 00), new String [] {new String("Tsonga"), new String("Nadal")}, new String("ilesCaimans"));
 
-/*			//Test to verify when the pseudo is not correct but the password is
+			// crédit  de joueurs
+
+			siteDeParisMetier.crediterJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), 1789, new String("ilesCaimans"));
+			siteDeParisMetier.crediterJoueur(new String("Prou"), new String("Francoise"), new String("fanfan"), 1917, new String("ilesCaimans"));
+			siteDeParisMetier.crediterJoueur(new String("Prou"), new String("Morgane"), new String("momo"), 1848, new String("ilesCaimans"));
+			siteDeParisMetier.crediterJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), 785, new String("ilesCaimans"));
+			siteDeParisMetier.crediterJoueur(new String("Nadou"), new String("Sylvain"), new String("zinzin"), 1123, new String("ilesCaimans"));
+
+			// ajout de compétions
+
+			siteDeParisMetier.ajouterCompetition(new String("ChampionnatDeFrance2012"), new DateFrancaise(4, 6, 2012, 15, 00), new String [] {new String("Lyon"), new String("Marseille"), "Paris", new String("Rennes"), new String("Brest"), "StEtienne", new String("Lille"), "Nancy", "Toulouse", "Auxerre"}, new String("ilesCaimans"));
+			siteDeParisMetier.ajouterCompetition(new String("finaleRG2012"), new DateFrancaise(7, 6, 2012, 15, 00), new String [] {new String("Tsonga"), new String("Nadal")}, new String("ilesCaimans"));
+
+
+			//Test to verify when the pseudo is not correct but the password is
 			try {
-				sdm.miserVainqueur("nanar",passwdBernard,1,"ChampionnatDeFrance2012","Marseille");
+				siteDeParisMetier.miserVainqueur("nanar",passwdBernard,1,"ChampionnatDeFrance2012","Marseille");
 				System.out.println("n'a pas levé l'exception");
 			}
-			catch (JoueurInexistantException e){}
+			catch (JoueurException e){}
 			catch (Exception e){System.out.println("n'a pas levé l'exception JoueurInexistantException (the pseudo is not correct but the password is), mais " +  e.getClass().getName());}
 
 
 			//Test to verify when the password is not correct but the pseudo is
 			try {
-				sdm.miserVainqueur("nanard","qwerty12345",1,"ChampionnatDeFrance2012","Marseille");
+				siteDeParisMetier.miserVainqueur("nanard","qwerty12345",1,"ChampionnatDeFrance2012","Marseille");
 			}
-			catch (JoueurInexistantException e){}
+			catch (JoueurException e){}
 			catch (Exception e){System.out.println("n'a pas levé l'exception JoueurInexistantException (password is not correct but the pseudo is), mais " +  e.getClass().getName());}
 
 
 			//Test to verify when neither the password nor the pseudo are correct
 			try {
-				sdm.miserVainqueur("nanar","qwerty12345",1,"ChampionnatDeFrance2012","Marseille");
+				siteDeParisMetier.miserVainqueur("nanar","qwerty12345",1,"ChampionnatDeFrance2012","Marseille");
 			}
-			catch (JoueurInexistantException e){}
+			catch (JoueurException e){}
 			catch (Exception e){System.out.println("n'a pas levé l'exception JoueurInexistantException (neiher the password nor the pseudo are correct), mais " +  e.getClass().getName());}
 
 
 			try {
-				sdm.miserVainqueur("nanard",passwdBernard,-10,"ChampionnatDeFrance2012","Marseille");
+				siteDeParisMetier.miserVainqueur("nanard",passwdBernard,-10,"ChampionnatDeFrance2012","Marseille");
 				System.out.println("n'a pas levé l'exception");
 			}
 			catch (MetierException e){}
@@ -759,12 +768,12 @@ public class TestMetier {
 
 			//Test to verify when a Competition does not exist
 			try{
-				sdm.miserVainqueur("nanard",passwdBernard,1,"ChampionnatDeFranc2012","Marseille");
+				siteDeParisMetier.miserVainqueur("nanard",passwdBernard,1,"ChampionnatDeFranc2012","Marseille");
 				System.out.println("n'a pas levé l'exception");
 			}
-			catch (CompetitionInexistanteException e){}
+			catch (CompetitionException e){}
 			catch (Exception e){System.out.println("Le test n'a pas levé CompetitionInexistanteException mais une autre exception " +e.getClass().getName());}
-*/
+
 		}
 		catch(Exception e){
 			System.out.println("\n Exception imprévue : " + e);
@@ -886,41 +895,9 @@ public class TestMetier {
 				System.out.println("une compétition déja soldée  soldée sans lever CompetitionInexistanteException mais " + e.getClass().getName());
 			}
 
-			// on vérifie deux crédits restants 
+			// on vérifie deux crédits restants
 
 			//  nanard doit avoir une crédit de 1789
-/*
-			try {
-				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), 1790, new String("ilesCaimans"));
-				System.out.println("le credit de bernard devrait être inférieur à 1790, et l'exception JoueurException aurait dû être levée");
-			}
-			catch (JoueurException e) { } 
-			catch (Exception e) { 
-				System.out.println("le credit de bernard devrait être inférieur à 1790, et l'exception JoueurException aurait dû être levée mais c'est : " + e.getClass().getName());
-			}
-
-
-			try {
-				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), 1789, new String("ilesCaimans"));
-			}
-			catch (JoueurException e) { 
-				System.out.println("le credit de bernard devrait être égal à 1789, et l'exception JoueurException n'aurait pas dû être levée");
-			} 
-			catch (Exception e) { 
-				System.out.println("le credit de bernard devrait être égal à 1789, et aucune exception n'aurait dû être levée mais c'est : " + e.getClass().getName());
-			}
-
-			//  aure doit avoir un crédit de 785
-
-			try {
-				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), 786, new String("ilesCaimans"));
-				System.out.println("le credit d'aure devrait être inférieur à 786, et l'exception JoueurException aurait dû être levée");
-			}
-			catch (JoueurException e) { } 
-			catch (Exception e) { 
-				System.out.println("le credit d'aure devrait être inférieur à 786, et l'exception JoueurException aurait dû être levée mais c'est : " + e.getClass().getName());
-			}
-*/
 			try {
 				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), 785, new String("ilesCaimans"));
 			}
@@ -930,7 +907,6 @@ public class TestMetier {
 			catch (Exception e) { 
 				System.out.println("le credit d'aure devrait être égal à 785, et aucune exception n'aurait dû être levée mais c'est : " + e.getClass().getName());
 			}
-
 
 		}
 		catch (Exception e) {
@@ -1003,39 +979,6 @@ public class TestMetier {
 
 			// on vérifie trois crédits restants 
 
-			//  nanard doit avoir une crédit de 1868
-/*
-			try {
-				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), 1869, new String("ilesCaimans"));
-				System.out.println("le credit de bernard devrait être inférieur à 1869, et l'exception JoueurException aurait dû être levée");
-			}
-			catch (JoueurException e) { } 
-			catch (Exception e) { 
-				System.out.println("le credit de bernard devrait être inférieur à 1869, et l'exception JoueurException aurait dû être levée mais c'est : " + e.getClass().getName());
-			}
-
-
-			try {
-				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Bernard"), new String("nanard"), 1868, new String("ilesCaimans"));
-			}
-			catch (JoueurException e) { 
-				System.out.println("le credit de bernard devrait être égal à 1868, et l'exception JoueurException n'aurait pas dû être levée");
-			} 
-			catch (Exception e) { 
-				System.out.println("le credit de bernard devrait être égal à 1868, et aucune exception n'aurait dû être levée mais c'est : " + e.getClass().getName());
-			}
-
-			//  aure doit avoir un crédit de 904
-
-			try {
-				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), 905, new String("ilesCaimans"));
-				System.out.println("le credit d'aure devrait être inférieur à 905, et l'exception JoueurException aurait dû être levée");
-			}
-			catch (JoueurException e) { } 
-			catch (Exception e) { 
-				System.out.println("le credit d'aure devrait être inférieur à 905, et l'exception JoueurException aurait dû être levée mais c'est : " + e.getClass().getName());
-			}
-*/
 			try {
 				siteDeParisMetier.debiterJoueur(new String("Prou"), new String("Aureliane"), new String("aure"), 904, new String("ilesCaimans"));
 			}
@@ -1047,16 +990,6 @@ public class TestMetier {
 			}
 
 			//  zinzin doit avoir un crédit de 1043
-/*
-			try {
-				siteDeParisMetier.debiterJoueur(new String("Nadou"), new String("Sylvain"), new String("zinzin"), 1044, new String("ilesCaimans"));
-				System.out.println("le credit de zinzin devrait être inférieur à 1044, et l'exception JoueurException aurait dû être levée");
-			}
-			catch (JoueurException e) { } 
-			catch (Exception e) { 
-				System.out.println("le credit de zinzin devrait être inférieur à 1044, et l'exception JoueurException aurait dû être levée mais c'est : " + e.getClass().getName());
-			}
-*/
 			try {
 				siteDeParisMetier.debiterJoueur(new String("Nadou"), new String("Sylvain"), new String("zinzin"), 1043, new String("ilesCaimans"));
 			}

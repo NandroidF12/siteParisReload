@@ -2,47 +2,38 @@ package siteParis.model;
 
 import siteParis.DateFrancaise;
 import java.util.LinkedList;
-import java.util.List;
 
 
 public class Competition {
 	private String nom; //le nom de la competitio
-	private DateFrancaise date = null;//la date de création de la competition
-	private LinkedList<String> competiteurs = null;
+	private DateFrancaise dateCreationCompetition = null;//la dateCreationCompetition de création de la competition
+	private LinkedList<String> competiteursListe = null;
 
    //constructeur
-   public Competition(String nom,DateFrancaise date,LinkedList<String>competiteurs){
+   public Competition(String nom, DateFrancaise dateCreationCompetition, LinkedList<String> competiteursListe){
       //valeurs de nom et data initialiser
 		this.nom = nom;
-		this.date = date;
-		this.competiteurs = competiteurs;
+		this.dateCreationCompetition = dateCreationCompetition;
+		this.competiteursListe = competiteursListe;
 	} 
 
 	//retrouver nom de Competition
-
 	public String getNom() {
 		return nom;
 	}
 	
 	//changer nom de Competition
-	public void setNom(String nom) {
-		this.nom = nom;
+	public void setNom(String nomCompetition) {
+		this.nom = nomCompetition;
 	}
 	
-	//retrouver date de Competition
-	public DateFrancaise getDate() {
-		return this.date;
+	//retrouver dateCreationCompetition de Competition
+	public DateFrancaise getDateCreationCompetition() {
+		return this.dateCreationCompetition;
 	}
 
 	//retrouver les competiteur de Competition
-	public LinkedList<String> getCompetiteurs() {
-	 	return this.competiteurs;
+	public LinkedList<String> getCompetiteursListe() {
+	 	return this.competiteursListe;
 	}
-
-	//changer les competiteur de Competition
-//	public void setCompetiteurs(LinkedList<Competiteur> competiteurs) {
-//		this.competiteurs = competiteurs;
-//	}
-
-
 }

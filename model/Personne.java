@@ -2,15 +2,14 @@ package siteParis.model;
 
 public class Personne {
 
-	
 	private String nom; //nom de personne
-	private String mdp; //mdp de personne
+	private String motDePasse; //motDePasse de personne
 	private String pseudo; //pseudo de personne
 	
 	//constructeur
-	public Personne(String nom,String mdp,String pseudo){
+	public Personne(String nom, String motDePasse, String pseudo){
 		this.nom = nom;
-		this.mdp = mdp;
+		this.motDePasse = motDePasse;
 		this.pseudo = pseudo;
 	}
 	
@@ -19,9 +18,9 @@ public class Personne {
 		return nom;
 	}
 	
-	//retouner mdp de Personne
-	public String getMdp(){
-		return mdp;
+	//retouner motDePasse de Personne
+	public String getMotDePasse(){
+		return motDePasse;
 	}
 	
 	//retouner pseudo de Personne
@@ -30,18 +29,18 @@ public class Personne {
 	}
 	
 	//changer nom de Personne
-	public void  setNom(String n_nom){
-		nom = n_nom;		
+	public void  setNom(String personneNom){
+		nom = personneNom;
 	}
 	
 	//changer nom de Mdp
-	public void setMdp(String n_mdp){
-		mdp = n_mdp;
+	public void setMotDePasse(String personneMotDePasse){
+		motDePasse = personneMotDePasse;
 	}
 	
 	//changer pseudo de Personne
-	public void setPseudo(String n_pseudo){
-		pseudo = n_pseudo;
+	public void setPseudo(String personnePseudo){
+		pseudo = personnePseudo;
 	}
 	
 	//consulter Personne
