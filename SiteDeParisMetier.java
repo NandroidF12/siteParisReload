@@ -459,8 +459,8 @@ public class SiteDeParisMetier {
 	 * @throws JoueurInexistantException   levée si il n'y a pas de joueur  avec les mêmes nom,  prénom et pseudo.
 	 */
 	public void crediterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons, String passwordGestionnaire) throws MetierException, JoueurException, JoueurInexistantException {
-		this.validitePasswordGestionnaire(passwordGestionnaire);
-		this.validiteParametresJoueur(nom, prenom, pseudo);
+		validitePasswordGestionnaire(passwordGestionnaire);
+		validiteParametresJoueur(nom, prenom, pseudo);
 
 		boolean joueurTrouve = false;
 		boolean joueurNomPseudo = false;
@@ -469,8 +469,8 @@ public class SiteDeParisMetier {
 
 		for(Joueur joueur: this.joueurs)    {
             if(joueur.getNom().equals(nom) && joueur.getPreNom().equals(prenom) && joueur.getPseudo().equals(pseudo))   {
-            	joueurTrouve = true;
                 joueur.ajoutJetons(sommeEnJetons);
+				joueurTrouve = true;
             }
         }
 
@@ -541,7 +541,7 @@ public class SiteDeParisMetier {
 	 */
 	public LinkedList <LinkedList <String>> consulterJoueurs(String passwordGestionnaire) throws MetierException {
 
-		this.validitePasswordGestionnaire(passwordGestionnaire);
+		validitePasswordGestionnaire(passwordGestionnaire);
 
 		// intialise the String List of Players.
 		LinkedList<LinkedList<String>> listJouers = new LinkedList<LinkedList<String>>();
@@ -674,7 +674,7 @@ public class SiteDeParisMetier {
 		for(Competition competition : this.competitions) {
 			
 			competitionsinfo.add(competition.getNom());
-		//	competitionsinfo.add(competition.getDate());
+			competitionsinfo.add(competition.getDate().toString());
 			competitons.add(competitionsinfo);
 		}
 		
